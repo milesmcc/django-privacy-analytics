@@ -11,6 +11,9 @@ class PageView(models.Model):
 
     @staticmethod
     def create_for_request(request):
+        if request.META.get('HTTP_DNT', '0') == '1':
+            return
+
         agent = request.META.get('HTTP_USER_AGENT', "")
         path = request.path
         referrer = request.META.get('HTTP_REFERER', "")
