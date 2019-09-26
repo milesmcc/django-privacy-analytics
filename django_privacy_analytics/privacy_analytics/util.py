@@ -10,3 +10,6 @@ def get_user_hash(request):
     user_agent = request.META.get("HTTP_USER_AGENT")
     cookies = request.COOKIES
     return hashlib.sha256((str(ip) + str(user_agent) + str(cookies)).encode("utf-8")).hexdigest()
+
+def mean(items):
+    return sum(items) / len(items)
