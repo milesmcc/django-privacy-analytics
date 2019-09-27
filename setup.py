@@ -15,6 +15,7 @@ setup(
     license='MIT',  # example license
     description='Privacy-focused, performant, and server-side analytics for your Django project',
     long_description=README,
+    long_description_content_type='text/markdown',
     url='https://github.com/milesmcc/django-privacy-analytics/',
     author='R. Miles McCain',
     author_email='opensource@sendmiles.email',
