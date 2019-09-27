@@ -7,7 +7,7 @@ Django Privacy Analytics fully respects the 'Do Not Track' (DNT) header; if a re
 
 ### Installation
 
-1. Install DJango Privacy Analytics by running `pip install django-privacy-analytics` or adding `django-privacy-analytics` to your `requirements.txt`
+1. Install Django Privacy Analytics by running `pip install django-privacy-analytics` or adding `django-privacy-analytics` to your `requirements.txt`
 2. Add `privacy_analytics` to your `INSTALLED_APPS` setting.
 3. Add `privacy_analytics.middleware.AnalyticsMiddleware` to your `MIDDLEWARE` setting, ideally somewhere towards the end (and after `AuthenticationMiddleware`).
 4. Create the new necessary models by running `python3 manage.py migrate`.
