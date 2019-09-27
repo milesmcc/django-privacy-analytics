@@ -18,7 +18,6 @@ class AnalyticsMiddleware:
 
     def __call__(self, request):
         response = self.get_response(request)
-        print(request.path)
         if hasattr(settings, "ANALYTICS_IGNORE_PATHS"):
             for path in settings.ANALYTICS_IGNORE_PATHS:
                 if request.path.startswith(path):

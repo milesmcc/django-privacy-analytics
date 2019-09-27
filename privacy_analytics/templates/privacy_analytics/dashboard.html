@@ -1,0 +1,113 @@
+{% extends 'privacy_analytics/base.html' %}
+{% load humanize %}
+{% block content %}
+<br><br>
+<h1 class="title has-text-primary is-size-1">
+    Privacy Analytics
+</h1>
+<h2 class="subtitle">
+    <form method="GET">
+        From <input type="datetime-local" class="input is-small is-inline" name="from" value="{{from}}" />
+        until <input type="datetime-local" name="until" value="{{until}}" class="input is-small is-inline">
+        to <input type="url" placeholder="any page" value="{{path}}" name="path" class="input is-small is-inline" />
+        <button type="submit" class="button is-small">Update Filters</button>
+    </form>
+</h2>
+<br>
+<section class="messages">
+    {% for message in messages %}
+    <div class="notification {{message.classes}}">{{message.content}}</div>
+    {% endfor %}
+</section>
+<br>
+<div class="columns">
+    <div class="column">
+        <div class="notification is-success">
+            <p class="title">{{unique_visitors|intcomma|floatformat:"-1"}}</p>
+            <p class="subtitle">Unique Visitors</p>
+        </div>
+    </div>
+    <div class="column">
+        <div class="notification is-primary">
+            <p class="title">{{total_views|intcomma|floatformat:"-1"}}</p>
+            <p class="subtitle">Total Views</p>
+        </div>
+    </div>
+    <div class="column">
+        <div class="notification is-info">
+            <p class="title">{{percent_authenticated|intcomma|floatformat:"-1"}}%</p>
+            <p class="subtitle">Authenticated</p>
+        </div>
+    </div>
+    <div class="column">
+        <div class="notification is-link">
+            <p class="title">{{views_per_visitor|intcomma|floatformat:"-1"}}</p>
+            <p class="subtitle">Views Per Visitor</p>
+        </div>
+    </div>
+</div>
+<br><br>
+<div class="columns">
+    <div class="column is-8">
+        <table class="table is-fullwidth">
+            <thead>
+                <tr>
+                    <th>Path</th>
+                    <th>Count</th>
+                    <th>Percent</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for page in pages %}
+                <tr>
+                    <td class="is-narrow">
+                        <form method="GET">
+                            <input type="hidden" value="{{page.path}}" name="path">
+                            <input type="hidden" value="{{page.from}}" name="from">
+                            <input type="hidden" value="{{page.until}}" name="until"><a
+                                href="{{page.path}}">{{page.path|truncatechars:30}}</a>
+                            <button type="submit" class="button is-small is-text">&rarr;</button></form>
+                    </td>
+                    <td class="is-narrow">{{page.n}}</td>
+                    <td class="is-narrow">{{page.percent|intcomma|floatformat:"-1"}}%</td>
+                    <td><progress class="progress is-link is-large" value="{{page.percent}}"
+                            max="100">{{page.percent}}%</progress></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="column is-4">
+        <table class="table is-fullwidth">
+            <thead>
+                <tr>
+                    <th>Referrer</th>
+                    <th>Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for referrer in referrers %}
+                <tr>
+                    <td>
+                        {% if referrer.referrer %}
+                        <a href="{{referrer.referrer}}">{{referrer.referrer|truncatechars:30}}</a>
+                        {% else %}
+                        No Referrer
+                        {% endif %}
+                    </td>
+                    <td>{{referrer.n}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<hr>
+<form method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="before" value="{{from}}">
+    <input type="hidden" name="action" value="clear">
+    <button type="submit" class="button is-danger is-outlined">Clear Data Before {{from}}</button>
+</form>
+{% endblock %}
