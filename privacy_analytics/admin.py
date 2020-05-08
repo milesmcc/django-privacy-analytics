@@ -3,4 +3,4 @@ from .models import PageView
 
 @admin.register(PageView)
 class PageViewAdmin(admin.ModelAdmin):
-    list_display = ("path", "time", "referrer", "user_hash", "is_authenticated")
+    list_display = ("path", "time", "referrer", "session_key", "is_authenticated")

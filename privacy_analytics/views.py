@@ -38,8 +38,8 @@ def dashboard(request):
     if path != "":
         views = views.filter(path=path)
 
-    views_per_visitor = mean([item["n"] for item in views.values("user_hash").annotate(n=models.Count("pk"))])
-    unique_visitors = views.values("user_hash").distinct().count()
+    views_per_visitor = mean([item["n"] for item in views.values("session_key").annotate(n=models.Count("pk"))])
+    unique_visitors = views.values("session_key").distinct().count()
     total_views = views.count()
     percent_authenticated = views.filter(is_authenticated=True).count() * 100 / views.count()
     pages = sorted(views.values("path").annotate(n=models.Count("pk")), key=lambda k: k["n"], reverse=True)[:20]
