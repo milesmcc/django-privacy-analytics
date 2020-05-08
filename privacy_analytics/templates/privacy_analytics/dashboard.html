@@ -7,9 +7,9 @@
 </h1>
 <h2 class="subtitle">
     <form method="GET">
-        From <input type="datetime-local" class="input is-small is-inline" name="from" value="{{from}}" />
-        until <input type="datetime-local" name="until" value="{{until}}" class="input is-small is-inline">
-        to <input type="url" placeholder="any page" value="{{path}}" name="path" class="input is-small is-inline" />
+        From <input type="datetime-local" class="input is-small is-inline" name="start" value="{{ analytics_filter.start }}" />
+        Until <input type="datetime-local" name="end" value="{{ analytics_filter.end }}" class="input is-small is-inline">
+        To <input type="text" placeholder="any page" value="{{ analytics_filter.path}}" name="path" class="input is-small is-inline" />
         <button type="submit" class="button is-small">Update Filters</button>
     </form>
 </h2>
@@ -35,13 +35,13 @@
     </div>
     <div class="column">
         <div class="notification is-info">
-            <p class="title">{{percent_authenticated|intcomma|floatformat:"-1"}}%</p>
+            <p class="title">{{percent_authenticated.total|intcomma|floatformat:"-1"}}%</p>
             <p class="subtitle">Authenticated</p>
         </div>
     </div>
     <div class="column">
         <div class="notification is-link">
-            <p class="title">{{views_per_visitor|intcomma|floatformat:"-1"}}</p>
+            <p class="title">{{views_per_visitor.total__avg|intcomma|floatformat:"-1"}}</p>
             <p class="subtitle">Views Per Visitor</p>
         </div>
     </div>
@@ -69,7 +69,7 @@
                                 href="{{page.path}}">{{page.path|truncatechars:30}}</a>
                             <button type="submit" class="button is-small is-text">&rarr;</button></form>
                     </td>
-                    <td class="is-narrow">{{page.n}}</td>
+                    <td class="is-narrow">{{page.total}}</td>
                     <td class="is-narrow">{{page.percent|intcomma|floatformat:"-1"}}%</td>
                     <td><progress class="progress is-link is-large" value="{{page.percent}}"
                             max="100">{{page.percent}}%</progress></td>
@@ -96,7 +96,7 @@
                         No Referrer
                         {% endif %}
                     </td>
-                    <td>{{referrer.n}}</td>
+                    <td>{{referrer.total}}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -106,8 +106,8 @@
 <hr>
 <form method="POST">
     {% csrf_token %}
-    <input type="hidden" name="before" value="{{from}}">
+    <input type="hidden" name="before" value="{{ analytics_filter.start }}">
     <input type="hidden" name="action" value="clear">
-    <button type="submit" class="button is-danger is-outlined">Clear Data Before {{from}}</button>
+    <button type="submit" class="button is-danger is-outlined">Clear Data Before {{ analytics_filter.start }}</button>
 </form>
 {% endblock %}

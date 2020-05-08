@@ -17,6 +17,8 @@ class AnalyticsMiddleware:
         if not request.META.get('HTTP_DNT'):
             if hasattr(settings, 'ANALYTICS_IGNORE_PATHS'):
                 if not any(request.path.startswith(path) for path in settings.ANALYTICS_IGNORE_PATHS):
+                    if not request.session.session_key:
+                        request.session.create()
                     PageView.create_for_request(request)
             else:
                 PageView.create_for_request(request)

@@ -1,5 +1,7 @@
 from django.db import models
-from .util import get_user_hash
+
+from .managers import PageViewManager
+
 
 class PageView(models.Model):
     agent = models.TextField()
@@ -9,7 +11,7 @@ class PageView(models.Model):
     session_key = models.TextField()
     is_authenticated = models.BooleanField()
 
-    objects = models.Manager()
+    objects = PageViewManager()
 
     @staticmethod
     def create_for_request(request):
