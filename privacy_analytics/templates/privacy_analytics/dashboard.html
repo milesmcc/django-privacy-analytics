@@ -1,16 +1,16 @@
 {% extends 'privacy_analytics/base.html' %}
 {% load humanize %}
 {% block content %}
-<br><br>
 <h1 class="title has-text-primary is-size-1">
     Privacy Analytics
 </h1>
 <h2 class="subtitle">
     <form method="GET">
-        From <input type="datetime-local" class="input is-small is-inline" name="start" value="{{ analytics_filter.start }}" />
-        Until <input type="datetime-local" name="end" value="{{ analytics_filter.end }}" class="input is-small is-inline">
-        To <input type="text" placeholder="any page" value="{{ analytics_filter.path}}" name="path" class="input is-small is-inline" />
-        <button type="submit" class="button is-small">Update Filters</button>
+        From <input type="datetime-local" class="input is-small is-inline" name="time__gte" value="{{ start }}" required>
+        Until <input type="datetime-local" name="time__lte" value="{{ end }}" class="input is-small is-inline" required>
+        To <input type="text" placeholder="any page" value="{{ path }}" name="path__startswith" class="input is-small is-inline" />
+        <button type="submit" class="button is-small is-success">Update Filters</button>
+        <a href={% url 'analytics:dashboard' %} class="button is-small is-danger">Clear</a>
     </form>
 </h2>
 <br>
@@ -64,8 +64,8 @@
                     <td class="is-narrow">
                         <form method="GET">
                             <input type="hidden" value="{{page.path}}" name="path">
-                            <input type="hidden" value="{{page.from}}" name="from">
-                            <input type="hidden" value="{{page.until}}" name="until"><a
+                            <input type="hidden" value="{{page.from}}" name="start">
+                            <input type="hidden" value="{{page.until}}" name="end"><a
                                 href="{{page.path}}">{{page.path|truncatechars:30}}</a>
                             <button type="submit" class="button is-small is-text">&rarr;</button></form>
                     </td>
@@ -103,11 +103,4 @@
         </table>
     </div>
 </div>
-<hr>
-<form method="POST">
-    {% csrf_token %}
-    <input type="hidden" name="before" value="{{ analytics_filter.start }}">
-    <input type="hidden" name="action" value="clear">
-    <button type="submit" class="button is-danger is-outlined">Clear Data Before {{ analytics_filter.start }}</button>
-</form>
 {% endblock %}

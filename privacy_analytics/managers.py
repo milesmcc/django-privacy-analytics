@@ -1,4 +1,4 @@
-from django.db.models import Manager, Avg, Count, Sum, Q, FloatField
+from django.db.models import Manager, Avg, Count, Q, FloatField
 from django.db.models.functions import Cast
 
 
