@@ -1,106 +1,143 @@
 {% extends 'privacy_analytics/base.html' %}
 {% load humanize %}
 {% block content %}
-<h1 class="title has-text-primary is-size-1">
-    Privacy Analytics
-</h1>
-<h2 class="subtitle">
-    <form method="GET">
-        From <input type="datetime-local" class="input is-small is-inline" name="time__gte" value="{{ start }}" required>
-        Until <input type="datetime-local" name="time__lte" value="{{ end }}" class="input is-small is-inline" required>
-        To <input type="text" placeholder="any page" value="{{ path }}" name="path__startswith" class="input is-small is-inline" />
-        <button type="submit" class="button is-small is-success">Update Filters</button>
-        <a href={% url 'analytics:dashboard' %} class="button is-small is-danger">Clear</a>
-    </form>
-</h2>
-<br>
-<section class="messages">
-    {% for message in messages %}
-    <div class="notification {{message.classes}}">{{message.content}}</div>
-    {% endfor %}
+<section class="section">
+    <div class="container">
+        <h1 class="title">Privacy Analytics</h1>
+        <form method="GET" class="field is-horizontal">
+            <div class="field-body">
+                <div class="field">
+                    <p class="control">
+                        <input class="input is-medium" type="datetime-local" placeholder="start date" required>
+                    </p>
+                </div>
+                <div class="field">
+                    <p class="control">
+                        <input class="input is-medium" type="datetime-local" placeholder="end date" required>
+                    </p>
+                </div>
+                <div class="field is-narrow">
+                    <p class="control">
+                        <button type="submit" class="button is-success is-medium">
+                            Filter
+                        </button>
+                    </p>
+                </div>
+                <div class="field is-narrow is-fullwidth">
+                    <p class="control">
+                        <a href="{% url 'analytics:dashboard' %}" class="button is-danger is-medium">
+                            Clear
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </form>
+    </div>
 </section>
-<br>
-<div class="columns">
-    <div class="column">
-        <div class="notification is-success">
-            <p class="title">{{unique_visitors|intcomma|floatformat:"-1"}}</p>
-            <p class="subtitle">Unique Visitors</p>
+
+<section class="section is-paddingless">
+    <div class="container">
+        <div class="columns">
+            <div class="column">
+                <div class="notification is-success is-bold">
+                    <p class="title">{{ unique_visitors | intcomma }}</p>
+                    <p class="subtitle">Unique Visitors</p>
+                </div>
+            </div>
+
+            <div class="column">
+                <div class="notification is-primary is-bold">
+                    <p class="title">{{ total_views | intcomma }}</p>
+                    <p class="subtitle">Total Views</p>
+                </div>
+            </div>
+            <div class="column">
+                <div class="notification is-info is-bold">
+                    <p class="title">{{ percent_authenticated.total | intcomma | floatformat:"-1" }}%</p>
+                    <p class="subtitle">Authenticated</p>
+                </div>
+            </div>
+            <div class="column">
+                <div class="notification is-link is-bold">
+                    <p class="title">{{ views_per_visitor.total__avg | intcomma | floatformat:"-1" }}</p>
+                    <p class="subtitle">Views Per Visitor</p>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="column">
-        <div class="notification is-primary">
-            <p class="title">{{total_views|intcomma|floatformat:"-1"}}</p>
-            <p class="subtitle">Total Views</p>
+</section>
+
+<section class="section is-paddingless">
+    <div class="container">
+        <div class="columns">
+            <div class="column is-8">
+            <div class="table-container">
+                <table class="table is-fullwidth is-block">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Path</th>
+                            <th>Count</th>
+                            <th>Percent</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for page in pages %}
+                            <tr>
+                                <th class="is-narrow">{{ forloop.counter }}</th>
+                                <td class="is-narrow">{{ page.path }}</td>
+                                <td class="is-narrow">{{ page.total | intcomma }}</td>
+                                <td class="is-narrow">{{ page.percent }}%</td>
+                                <td class="is-large"><progress class="progress is-large is-danger" value="{{ page.percent }}" max="100">{{ page.percent }}%</progress></td>
+                            </tr>
+                        {% empty %}
+                            <h1 class="title">Sorry, there is no analytics data</h1>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+            </div>
+
+            <div class="column is-4">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Referrer</th>
+                            <th>Count</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for referrer in referrers %}
+                            <tr>
+                                <th class="is-narrow">{{ forloop.counter }}</th>
+                                <td class="is-large">
+                                    {% if referrer.referrer %}
+                                        <a href={{ referrer.referrer }}>{{ referrer.referrer | truncatechars:30 }}</a>
+                                    {% else %}
+                                        No Referrer
+                                    {% endif %}
+                                </td>
+                                <td class="is-large">{{ referrer.total }}</td>
+                            </tr>
+                        {% empty %}
+                            <h1 class="title">Sorry, there is no analytics data</h1>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-    <div class="column">
-        <div class="notification is-info">
-            <p class="title">{{percent_authenticated.total|intcomma|floatformat:"-1"}}%</p>
-            <p class="subtitle">Authenticated</p>
+</section>
+
+<section class="section">
+    <div class="level">
+        <div class="level-item level-left">
+            <button class="button is-danger is-outlined">Clear Stored Analytics</button>
         </div>
     </div>
-    <div class="column">
-        <div class="notification is-link">
-            <p class="title">{{views_per_visitor.total__avg|intcomma|floatformat:"-1"}}</p>
-            <p class="subtitle">Views Per Visitor</p>
-        </div>
-    </div>
-</div>
-<br><br>
-<div class="columns">
-    <div class="column is-8">
-        <table class="table is-fullwidth">
-            <thead>
-                <tr>
-                    <th>Path</th>
-                    <th>Count</th>
-                    <th>Percent</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for page in pages %}
-                <tr>
-                    <td class="is-narrow">
-                        <form method="GET">
-                            <input type="hidden" value="{{page.path}}" name="path">
-                            <input type="hidden" value="{{page.from}}" name="start">
-                            <input type="hidden" value="{{page.until}}" name="end"><a
-                                href="{{page.path}}">{{page.path|truncatechars:30}}</a>
-                            <button type="submit" class="button is-small is-text">&rarr;</button></form>
-                    </td>
-                    <td class="is-narrow">{{page.total}}</td>
-                    <td class="is-narrow">{{page.percent|intcomma|floatformat:"-1"}}%</td>
-                    <td><progress class="progress is-link is-large" value="{{page.percent}}"
-                            max="100">{{page.percent}}%</progress></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <div class="column is-4">
-        <table class="table is-fullwidth">
-            <thead>
-                <tr>
-                    <th>Referrer</th>
-                    <th>Count</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for referrer in referrers %}
-                <tr>
-                    <td>
-                        {% if referrer.referrer %}
-                        <a href="{{referrer.referrer}}">{{referrer.referrer|truncatechars:30}}</a>
-                        {% else %}
-                        No Referrer
-                        {% endif %}
-                    </td>
-                    <td>{{referrer.total}}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
+</section>
 {% endblock %}

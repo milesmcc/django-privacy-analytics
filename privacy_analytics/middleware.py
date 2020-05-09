@@ -18,5 +18,4 @@ class AnalyticsMiddleware:
                     PageView.create_for_request(request)
             else:
                 PageView.create_for_request(request)
-
         return response
