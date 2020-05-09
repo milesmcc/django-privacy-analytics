@@ -26,14 +26,14 @@
         <div class="columns">
             <div class="column">
                 <div class="notification is-success">
-                    <p class="title">{{ unique_visitors }}</p>
+                    <p class="title">{{ unique_visitors | intcomma }}</p>
                     <p class="subtitle">Unique Visitors</p>
                 </div>
             </div>
 
             <div class="column">
                 <div class="notification is-primary">
-                    <p class="title">{{ total_views }}</p>
+                    <p class="title">{{ total_views | intcomma }}</p>
                     <p class="subtitle">Total Views</p>
                 </div>
             </div>
