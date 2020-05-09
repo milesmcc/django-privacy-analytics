@@ -20,3 +20,6 @@ class PageViewManager(Manager):
     
     def pages(self, **kwargs):
         return self.filter(**kwargs).values('path').annotate(total=Count('pk'), percent=(Count('pk') * 100) / self.filter(**kwargs).all().count()).order_by('-total')
+    
+    def clear_by_time(self, **kwargs):
+        return self.filter(**kwargs).all().remove()

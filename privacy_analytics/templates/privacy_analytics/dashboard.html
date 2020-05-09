@@ -8,12 +8,12 @@
             <div class="field-body">
                 <div class="field">
                     <p class="control">
-                        <input class="input is-medium" type="datetime-local" placeholder="start date" required>
+                        <input type="datetime-local" class="input is-medium" name="time__gte" value="{{ time__gte }}" required>
                     </p>
                 </div>
                 <div class="field">
                     <p class="control">
-                        <input class="input is-medium" type="datetime-local" placeholder="end date" required>
+                        <input type="datetime-local" class="input is-medium" name="time__lte" value="{{ time__lte }}" required>
                     </p>
                 </div>
                 <div class="field is-narrow">
@@ -23,7 +23,7 @@
                         </button>
                     </p>
                 </div>
-                <div class="field is-narrow is-fullwidth">
+                <div class="field is-narrow">
                     <p class="control">
                         <a href="{% url 'analytics:dashboard' %}" class="button is-danger is-medium">
                             Clear
@@ -72,7 +72,7 @@
         <div class="columns">
             <div class="column is-8">
             <div class="table-container">
-                <table class="table is-fullwidth is-block">
+                <table class="table is-fullwidth">
                     <thead>
                         <tr>
                             <th></th>
@@ -92,8 +92,6 @@
                                 <td class="is-narrow">{{ page.percent }}%</td>
                                 <td class="is-large"><progress class="progress is-large is-danger" value="{{ page.percent }}" max="100">{{ page.percent }}%</progress></td>
                             </tr>
-                        {% empty %}
-                            <h1 class="title">Sorry, there is no analytics data</h1>
                         {% endfor %}
                     </tbody>
                 </table>
@@ -101,7 +99,7 @@
             </div>
 
             <div class="column is-4">
-                <table class="table">
+                <table class="table is-fullwidth">
                     <thead>
                         <tr>
                             <th></th>
@@ -123,8 +121,6 @@
                                 </td>
                                 <td class="is-large">{{ referrer.total }}</td>
                             </tr>
-                        {% empty %}
-                            <h1 class="title">Sorry, there is no analytics data</h1>
                         {% endfor %}
                     </tbody>
                 </table>
