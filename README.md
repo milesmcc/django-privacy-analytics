@@ -1,4 +1,4 @@
-# Django Privacy Analytics
+![Logo](https://imgur.com/I4m7HXX.png)
 
 Django Privacy Analytics is a minimalist, performant, and privacy-focused analytics system that runs in your Django app.
 
@@ -15,10 +15,10 @@ Django Privacy Analytics fully respects the 'Do Not Track' (DNT) header; if a re
 
 ### Access
 
-Currently, the dashboard is only visible to superusers. This will be configurable in a future version.
+Analyics dashboard can be controlled by user permissions with the `PermissionsRequiredMixin`
 
 ### Settings
 
 In `settings.py`, you can set the following:
 
-* `ANALYTICS_IGNORE_PATHS`: ignore requests whose paths start with members of this **list**
+* `ANALYTICS_IGNORE_PATHS`: ignore requests whose paths start with members of this **list** 
