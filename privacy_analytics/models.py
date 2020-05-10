@@ -16,9 +16,9 @@ class PageView(models.Model):
     @staticmethod
     def create_for_request(request):
         PageView.objects.create(
-            agent=request.META.get('HTTP_USER_AGENT', ""),
+            agent=request.META.get('HTTP_USER_AGENT', ''),
             path=request.path,
-            referrer=request.META.get('HTTP_REFERER', ""),
+            referrer=request.META.get('HTTP_REFERER', ''),
             session_key=request.session.session_key,
             is_authenticated=request.user.is_authenticated
         )
