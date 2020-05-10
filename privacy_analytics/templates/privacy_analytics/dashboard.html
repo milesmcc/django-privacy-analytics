@@ -35,6 +35,12 @@
     </div>
 </section>
 
+<section class="messages">
+    {% for message in messages %}
+        <div class="notification {{ message.classes }}">{{ message.content }}</div>
+    {% endfor %}
+</section>
+
 <section class="section is-paddingless">
     <div class="container">
         <div class="columns">
@@ -132,7 +138,11 @@
 <section class="section">
     <div class="level">
         <div class="level-item level-left">
-            <button class="button is-danger is-outlined">Clear Stored Analytics</button>
+            <form method="GET">
+                <input type="hidden" name="before" value="{{ start }}"></input>
+                <input type="hidden" name="action" value="clear">
+                <button class="button is-danger is-outlined">Clear Stored Analytics</button>
+            </form>
         </div>
     </div>
 </section>
