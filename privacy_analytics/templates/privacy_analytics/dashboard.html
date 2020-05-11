@@ -81,22 +81,22 @@
 
 <section class="section is-paddingless">
     <div class="container">
-        <div class="columns">
+        <div class="columns is-centered">
+            {% if paths %}
             <div class="column is-8">
-            <div class="table-container">
-                <table class="table is-fullwidth">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Path</th>
-                            <th>Count</th>
-                            <th>Percent</th>
-                            <th></th>
-                        </tr>
-                    </thead>
+                
+                    <table class="table is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Path</th>
+                                <th>Count</th>
+                                <th>Percent</th>
+                                <th></th>
+                            </tr>
+                        </thead>
 
-                    <tbody>
-                        {% if paths %}
+                        <tbody>
                             {% for path in paths %}
                                 <tr>
                                     <th class="is-narrow">{{ forloop.counter }}</th>
@@ -106,39 +106,42 @@
                                     <td class="is-large"><progress class="progress is-large is-success" value="{{ path.percent }}" max="1">{{ percent }}%</progress></td>
                                 </tr>
                             {% endfor %}
-                        {% endif %}
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
                 </div>
-            </div>
 
-            <div class="column is-4">
-                <table class="table is-fullwidth">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Referrer</th>
-                            <th>Count</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {% for referrer in referrers %}
+                <div class="column is-4">
+                    <table class="table is-fullwidth">
+                        <thead>
                             <tr>
-                                <th class="is-narrow">{{ forloop.counter }}</th>
-                                <td class="is-large">
-                                    {% if referrer.referrer %}
-                                        <a href={{ referrer.referrer }}>{{ referrer.referrer | truncatechars:30 }}</a>
-                                    {% else %}
-                                        No Referrer
-                                    {% endif %}
-                                </td>
-                                <td class="is-large">{{ referrer.total }}</td>
+                                <th></th>
+                                <th>Referrer</th>
+                                <th>Count</th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+
+                        <tbody>
+                            {% for referrer in referrers %}
+                                <tr>
+                                    <th class="is-narrow">{{ forloop.counter }}</th>
+                                    <td class="is-large">
+                                        {% if referrer.referrer %}
+                                            <a href={{ referrer.referrer }}>{{ referrer.referrer | truncatechars:30 }}</a>
+                                        {% else %}
+                                            No Referrer
+                                        {% endif %}
+                                    </td>
+                                    <td class="is-large">{{ referrer.total }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
             </div>
+            {% else %}
+                <div class="column has-text-centered">
+                    <h1 class="title">Sorry, there is no analytics data to display</h1>
+                </div>
+            {% endif %}
         </div>
     </div>
 </section>
