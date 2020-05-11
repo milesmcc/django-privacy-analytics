@@ -1,5 +1,6 @@
 {% extends 'privacy_analytics/base.html' %}
 {% load humanize %}
+{% load analytics_tags %}
 {% block content %}
 <section class="section">
     <div class="container">
@@ -8,12 +9,17 @@
             <div class="field-body">
                 <div class="field">
                     <p class="control">
-                        <input type="datetime-local" class="input is-medium" name="time__gte" value="{{ time__gte }}" required>
+                        <input type="datetime-local" class="input is-medium" name="time__gte" value="{{ time__gte }}">
                     </p>
                 </div>
                 <div class="field">
                     <p class="control">
-                        <input type="datetime-local" class="input is-medium" name="time__lte" value="{{ time__lte }}" required>
+                        <input type="datetime-local" class="input is-medium" name="time__lte" value="{{ time__lte }}">
+                    </p>
+                </div>
+                <div class="field">
+                    <p class="control">
+                        <input type="text" class="input is-medium" name="path" placeholder="any path" value="{{ path }}">
                     </p>
                 </div>
                 <div class="field is-narrow">
@@ -46,26 +52,26 @@
         <div class="columns">
             <div class="column">
                 <div class="notification is-success is-bold">
-                    <p class="title">{{ unique_visitors | intcomma }}</p>
+                    <p class="title">{{ unique | length  | intcomma }}</p>
                     <p class="subtitle">Unique Visitors</p>
                 </div>
             </div>
 
             <div class="column">
                 <div class="notification is-primary is-bold">
-                    <p class="title">{{ total_views | intcomma }}</p>
+                    <p class="title">{{ total_views | length | intcomma }}</p>
                     <p class="subtitle">Total Views</p>
                 </div>
             </div>
             <div class="column">
                 <div class="notification is-info is-bold">
-                    <p class="title">{{ percent_authenticated.total | intcomma | floatformat:"-1" }}%</p>
+                    <p class="title">{{ percent_authenticated.percent | default_if_none:0 | percent | intcomma }}</p>
                     <p class="subtitle">Authenticated</p>
                 </div>
             </div>
             <div class="column">
                 <div class="notification is-link is-bold">
-                    <p class="title">{{ views_per_visitor.total__avg | intcomma | floatformat:"-1" }}</p>
+                    <p class="title">{{ average_per_visitor.views | default_if_none:0 | intcomma | floatformat:"2" }}</p>
                     <p class="subtitle">Views Per Visitor</p>
                 </div>
             </div>
@@ -90,15 +96,17 @@
                     </thead>
 
                     <tbody>
-                        {% for page in pages %}
-                            <tr>
-                                <th class="is-narrow">{{ forloop.counter }}</th>
-                                <td class="is-narrow">{{ page.path }}</td>
-                                <td class="is-narrow">{{ page.total | intcomma }}</td>
-                                <td class="is-narrow">{{ page.percent }}%</td>
-                                <td class="is-large"><progress class="progress is-large is-danger" value="{{ page.percent }}" max="100">{{ page.percent }}%</progress></td>
-                            </tr>
-                        {% endfor %}
+                        {% if paths %}
+                            {% for path in paths %}
+                                <tr>
+                                    <th class="is-narrow">{{ forloop.counter }}</th>
+                                    <td class="is-narrow">{{ path.path }}</td>
+                                    <td class="is-narrow">{{ path.total | intcomma }}</td>
+                                    <td class="is-narrow">{{ path.percent | percent | intcomma}}</td>
+                                    <td class="is-large"><progress class="progress is-large is-success" value="{{ path.percent }}" max="1">{{ percent }}%</progress></td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
                     </tbody>
                 </table>
                 </div>
@@ -138,9 +146,7 @@
 <section class="section">
     <div class="level">
         <div class="level-item level-left">
-            <form method="GET">
-                <input type="hidden" name="before" value="{{ start }}"></input>
-                <input type="hidden" name="action" value="clear">
+            <form method="GET" action='{% url 'analytics:clear' %}'>
                 <button class="button is-danger is-outlined">Clear Stored Analytics</button>
             </form>
         </div>
