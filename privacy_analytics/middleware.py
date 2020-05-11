@@ -1,6 +1,6 @@
 from django.conf import settings
 
-from .models import PageView
+import tasks
 
 
 class AnalyticsMiddleware:
@@ -15,7 +15,7 @@ class AnalyticsMiddleware:
                 if not any(request.path.startswith(path) for path in settings.ANALYTICS_IGNORE_PATHS):
                     if not request.session.session_key:
                         request.session.create()
-                    PageView.create_for_request(request)
+                    tasks.create_pageview(request)
             else:
-                PageView.create_for_request(request)
+                tasks.create_pageview.delay(request)
         return response
