@@ -1,4 +1,4 @@
-from django.db.models import Manager, Avg, Count, Q, FloatField, Sum, F#, Subquery
+from django.db.models import Manager, Count, Q, FloatField, Sum, F#, Subquery
 from django.db.models.functions import Cast
 
 class PageViewManager(Manager):

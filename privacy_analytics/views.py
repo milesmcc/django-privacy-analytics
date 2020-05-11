@@ -1,7 +1,4 @@
-from datetime import datetime as dt
-
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.utils.timezone import now, make_aware
 from django.views.generic import TemplateView, RedirectView
 
 from .models import PageView
@@ -25,7 +22,7 @@ class DashboardView(PermissionRequiredMixin, TemplateView):
         context['paths'] = PageView.objects.all_paths(**filters)
         context['average_per_visitor'] = PageView.objects.average_page_view(**filters)
         context['messages'] = self.messages
-        print(len(context['paths']))
+        
         return context
 
 

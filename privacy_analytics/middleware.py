@@ -1,6 +1,6 @@
 from django.conf import settings
 
-import tasks
+from . import tasks
 
 
 class AnalyticsMiddleware:
@@ -11,11 +11,19 @@ class AnalyticsMiddleware:
         response = self.get_response(request)
 
         if not request.META.get('HTTP_DNT'):
+            page = {
+                'agent': request.META.get('HTTP_USER_AGENT', ''),
+                'path': request.path,
+                'referrer': request.META.get('HTTP_REFERRER', ''),
+                'session_key': request.session.session_key,
+                'is_authenticated': request.user.is_authenticated
+            }
+
             if hasattr(settings, 'ANALYTICS_IGNORE_PATHS'):
                 if not any(request.path.startswith(path) for path in settings.ANALYTICS_IGNORE_PATHS):
                     if not request.session.session_key:
                         request.session.create()
-                    tasks.create_pageview(request)
+                    tasks.pageview_add_task(**page)
             else:
-                tasks.create_pageview.delay(request)
+                tasks.pageview_add_task(**page)
         return response
