@@ -9,17 +9,17 @@
             <div class="field-body">
                 <div class="field">
                     <p class="control">
-                        <input type="datetime-local" class="input is-medium" name="time__gte" value="{{ time__gte }}">
+                        <input type="datetime-local" class="input is-medium" name="time__gte" placeholder="Start time" value="{{ time__gte }}">
                     </p>
                 </div>
                 <div class="field">
                     <p class="control">
-                        <input type="datetime-local" class="input is-medium" name="time__lte" value="{{ time__lte }}">
+                        <input type="datetime-local" class="input is-medium" name="time__lte" placeholder="End time" value="{{ time__lte }}">
                     </p>
                 </div>
                 <div class="field">
                     <p class="control">
-                        <input type="text" class="input is-medium" name="path" placeholder="any path" value="{{ path }}">
+                        <input type="text" class="input is-medium" name="path" placeholder="Path" value="{{ path }}">
                     </p>
                 </div>
                 <div class="field is-narrow">
@@ -47,7 +47,7 @@
     {% endfor %}
 </section>
 
-<section class="section is-paddingless">
+<section class="section">
     <div class="container">
         <div class="columns">
             <div class="column">

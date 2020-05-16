@@ -10,7 +10,7 @@ class AnalyticsMiddleware:
     def __call__(self, request):
         response = self.get_response(request)
 
-        if not request.META.get('HTTP_DNT'):
+        if not request.META.get('HTTP_DNT', '0') == '1':
             if not request.session or not request.session.session_key:
                 request.session.save()
                 
@@ -24,7 +24,7 @@ class AnalyticsMiddleware:
 
             if hasattr(settings, 'ANALYTICS_IGNORE_PATHS'):
                 if not any(request.path.startswith(path) for path in settings.ANALYTICS_IGNORE_PATHS):
-                    tasks.pageview_add_task(**page)
+                    tasks.pageview_add_task.delay(**page)
             else:
-                tasks.pageview_add_task(**page)
+                tasks.pageview_add_task.delay(**page)
         return response
